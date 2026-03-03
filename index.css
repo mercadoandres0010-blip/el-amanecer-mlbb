@@ -644,3 +644,103 @@ footer {
         text-align: center;
     }
 }
+
+/* E-sports Recruitment Section */
+.esports-section {
+    padding: 8rem 2rem;
+    background: linear-gradient(rgba(15, 15, 27, 0.9), rgba(15, 15, 27, 0.9)),
+        url('battle.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    text-align: center;
+}
+
+.esports-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 5rem 3rem;
+    border-radius: 40px;
+    backdrop-filter: blur(10px);
+}
+
+.esports-badge {
+    background: #ff0050;
+    color: white;
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+}
+
+.esports-container h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(to right, #fff, var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.esports-container p {
+    font-size: 1.25rem;
+    color: var(--text-gray);
+    margin-bottom: 2.5rem;
+}
+
+.esports-requirements {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.esports-requirements span {
+    font-weight: 600;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-esports {
+    display: inline-block;
+    padding: 1.5rem 3.5rem;
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    transition: var(--transition);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+}
+
+.btn-esports:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
+    background: #fff;
+    color: #25D366;
+}
+
+@media (max-width: 768px) {
+    .esports-container {
+        padding: 3rem 1.5rem;
+    }
+
+    .esports-container h2 {
+        font-size: 2.2rem;
+    }
+
+    .esports-requirements {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+}
