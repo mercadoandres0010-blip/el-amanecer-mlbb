@@ -544,3 +544,103 @@ footer {
     transform: scale(1.05);
     box-shadow: 0 15px 40px rgba(255, 140, 0, 0.5);
 }
+
+/* Mobile Aesthetics Updates */
+@media (max-width: 768px) {
+    .hero-content {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 15vw, 4rem);
+        letter-spacing: -1px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .about-section,
+    .tournaments-section,
+    .social-section {
+        padding: 60px 1.5rem;
+    }
+
+    .about-content {
+        gap: 2.5rem;
+        text-align: center;
+    }
+
+    .about-text h2 {
+        font-size: 2.2rem;
+    }
+
+    .stats {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .tournaments-grid {
+        grid-template-columns: 1fr;
+        /* Stack cards on mobile */
+        gap: 2rem;
+    }
+
+    .tournament-img {
+        height: 250px;
+    }
+
+    .tournament-info {
+        padding: 1.5rem;
+    }
+
+    .bonoxs-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .bonoxs-body h3 {
+        font-size: 1.8rem;
+    }
+
+    .bonoxs-logo-img {
+        width: 150px;
+    }
+
+    .section-title h2 {
+        font-size: 2.2rem;
+    }
+
+    .social-grid {
+        grid-template-columns: 1fr;
+        /* Stack social cards */
+        gap: 1.5rem;
+    }
+
+    .social-card {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-cta,
+    .btn-bonoxs,
+    .btn-tournament {
+        width: 100%;
+        text-align: center;
+    }
+}
