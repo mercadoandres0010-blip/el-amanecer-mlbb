@@ -24,7 +24,10 @@
             <p class="hero-subtitle" style="animation: float 4s ease-in-out infinite;">La comunidad donde los héroes
                 ascienden. Estrategia, pasión y victoria en Mobile
                 Legends.</p>
-            <a href="#social" class="btn-cta">Unirse Ahora</a>
+            <div class="hero-actions" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                <a href="#social" class="btn-cta">Unirse Ahora</a>
+                <button onclick="openAuthModal()" class="btn-secondary-outline">Mi Cuenta</button>
+            </div>
         </div>
     </section>
 
@@ -204,7 +207,153 @@
             Games.</p>
     </footer>
 
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-content auth-card">
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthMode('login')">Ingresar</button>
+                <button class="auth-tab" onclick="switchAuthMode('register')">Registrarse</button>
+            </div>
+
+            <div id="userInfo" class="user-info-panel" style="display: none;">
+                <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+                <h3 id="userDisplayName">Usuario</h3>
+                <p id="userEmailTag">correo@ejemplo.com</p>
+                <button onclick="handleLogout()" class="btn-logout">Cerrar Sesión</button>
+            </div>
+
+            <form id="authForm" class="auth-form">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="authEmail" placeholder="tu@email.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required
+                        autocomplete="current-password">
+                </div>
+                <button type="submit" id="btnAuthSubmit" class="btn-submit">Entrar</button>
+                <div id="authErrorMessage" class="auth-error"></div>
+            </form>
+
+            <div class="auth-footer">
+                <p><i class="fas fa-shield-alt"></i> Seguridad Firebase activada</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Interactive script for reveal animations -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // CONFIGURACIÓN DE FIREBASE (Reemplazar con tus credenciales reales)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        let authMode = 'login';
+
+        // Funciones Globales para el Modal
+        window.openAuthModal = () => {
+            document.getElementById('authModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        window.switchAuthMode = (mode) => {
+            authMode = mode;
+            const tabs = document.querySelectorAll('.auth-tab');
+            const submitBtn = document.getElementById('btnAuthSubmit');
+            const errorMsg = document.getElementById('authErrorMessage');
+
+            errorMsg.innerText = '';
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (mode === 'login') {
+                tabs[0].classList.add('active');
+                submitBtn.innerText = 'Entrar';
+            } else {
+                tabs[1].classList.add('active');
+                submitBtn.innerText = 'Crear Cuenta';
+            }
+        };
+
+        // Escuchar cambios de estado
+        onAuthStateChanged(auth, (user) => {
+            const authForm = document.getElementById('authForm');
+            const userInfo = document.getElementById('userInfo');
+            const authTabs = document.querySelector('.auth-tabs');
+
+            if (user) {
+                authForm.style.display = 'none';
+                authTabs.style.display = 'none';
+                userInfo.style.display = 'block';
+                document.getElementById('userDisplayName').innerText = user.email.split('@')[0];
+                document.getElementById('userEmailTag').innerText = user.email;
+            } else {
+                authForm.style.display = 'block';
+                authTabs.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        });
+
+        // Manejar envío de formulario
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const errorMsg = document.getElementById('authErrorMessage');
+            const btn = document.getElementById('btnAuthSubmit');
+
+            errorMsg.innerText = '';
+            btn.disabled = true;
+            btn.innerText = 'Cargando...';
+
+            try {
+                if (authMode === 'login') {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                }
+                closeAuthModal();
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/invalid-credential') errorMsg.innerText = "Correo o contraseña incorrectos.";
+                else if (error.code === 'auth/email-already-in-use') errorMsg.innerText = "Este correo ya está registrado.";
+                else if (error.code === 'auth/weak-password') errorMsg.innerText = "Contraseña muy débil (mínimo 6 caracteres).";
+                else errorMsg.innerText = "Ocurrió un error. Verifica tus datos.";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = authMode === 'login' ? 'Entrar' : 'Crear Cuenta';
+            }
+        });
+
+        window.handleLogout = () => {
+            signOut(auth);
+        };
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('authModal').addEventListener('click', (e) => {
+            if (e.target.id === 'authModal') closeAuthModal();
+        });
+
+    </script>
+
     <script>
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

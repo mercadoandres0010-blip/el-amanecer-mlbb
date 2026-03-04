@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de Registro Seguro | Amanecer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffcc00;
+            --bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --error: #ff4444;
+            --success: #00c851;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .auth-container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 5px;
+            display: none;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .error {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success {
+            background: rgba(0, 200, 81, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-box {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 1.4;
+            background: #111;
+            padding: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <h2>Unirse a Amanecer</h2>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                <input type="email" id="email" placeholder="ejemplo@correo.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Contraseña</label>
+                <input type="password" id="password" placeholder="Mínimo 6 caracteres" required
+                    autocomplete="new-password">
+            </div>
+            <button type="submit" id="btnSubmit">Crear Cuenta</button>
+        </form>
+
+        <div id="authMessage" class="message"></div>
+
+        <div class="info-box">
+            <i class="fas fa-shield-alt"></i> <strong>Nota de Seguridad:</strong> Este formulario usa <strong>Firebase
+                Auth</strong>.
+            La contraseña se cifra antes de guardarse y viaja por un canal seguro (HTTPS). No necesitas servidor propio.
+        </div>
+    </div>
+
+    <!-- Scripts de Firebase (desde CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // CONFIGURACIÓN DE TU PROYECTO (Debes obtener esto en console.firebase.google.com)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY_REAL_AQUI",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const registerForm = document.getElementById('registerForm');
+        const authMessage = document.getElementById('authMessage');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('btnSubmit');
+
+            authMessage.className = 'message';
+            authMessage.style.display = 'none';
+            btn.disabled = true;
+            btn.innerText = 'Cifrando datos...';
+
+            try {
+                // LLAMADA SEGURA A FIREBASE
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                authMessage.innerText = "¡Cuenta creada con éxito! Bienvenido, " + user.email;
+                authMessage.classList.add('success');
+                registerForm.reset();
+            } catch (error) {
+                console.error(error);
+                let errorMsg = "Ocurrió un error al registrar.";
+
+                if (error.code === 'auth/email-already-in-use') errorMsg = "Este correo ya está registrado.";
+                if (error.code === 'auth/weak-password') errorMsg = "La contraseña es muy débil (mínimo 6 caracteres).";
+                if (error.code === 'auth/invalid-email') errorMsg = "El correo no es válido.";
+                if (error.code === 'auth/api-key-not-valid') errorMsg = "Error: Debes poner tu API KEY real en el código.";
+
+                authMessage.innerText = errorMsg;
+                authMessage.classList.add('error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Crear Cuenta';
+                authMessage.style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+
+</html>
