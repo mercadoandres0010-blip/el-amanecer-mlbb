@@ -858,6 +858,10 @@
             const hallOfFame = document.getElementById('hall-of-fame');
 
             const handleLightInteraction = (e) => {
+                // Support both mouse and touch events
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
                 // Check if Hall of Fame is active (visible)
                 const isHallVisible = hallOfFame && hallOfFame.classList.contains('active');
 
@@ -870,12 +874,12 @@
                 }
 
                 const rect = hero.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width;
-                const y = (e.clientY - rect.top) / rect.height;
+                const x = (clientX - rect.left) / rect.width;
+                const y = (clientY - rect.top) / rect.height;
 
                 // Screen coordinates for global effect
-                const globalX = (e.clientX / window.innerWidth) * 100;
-                const globalY = (e.clientY / window.innerHeight) * 100;
+                const globalX = (clientX / window.innerWidth) * 100;
+                const globalY = (clientY / window.innerHeight) * 100;
 
                 document.documentElement.style.setProperty('--sun-x', `${globalX}%`);
                 document.documentElement.style.setProperty('--sun-y', `${globalY}%`);
@@ -915,8 +919,8 @@
                         const rect = el.getBoundingClientRect();
                         const cx = rect.left + rect.width / 2;
                         const cy = rect.top + rect.height / 2;
-                        const dx = e.clientX - cx;
-                        const dy = e.clientY - cy;
+                        const dx = clientX - cx;
+                        const dy = clientY - cy;
                         const dist = Math.sqrt(dx * dx + dy * dy);
 
                         if (dist > maxRadius) {
@@ -946,7 +950,7 @@
                         const elRect = el.getBoundingClientRect();
                         const centerX = elRect.left + elRect.width / 2;
                         const centerY = elRect.top + elRect.height / 2;
-                        const dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
+                        const dist = Math.sqrt(Math.pow(clientX - centerX, 2) + Math.pow(clientY - centerY, 2));
                         if (dist < 150) {
                             el.classList.add('sun-dazzle');
                         } else {
@@ -961,21 +965,28 @@
             };
 
             window.addEventListener('mousemove', handleLightInteraction);
+            window.addEventListener('touchmove', handleLightInteraction, { passive: true });
+            window.addEventListener('touchstart', handleLightInteraction, { passive: true });
 
             // About Side Glow Logic
             const aboutContainer = document.getElementById('about-container');
             const aboutGlow = document.getElementById('about-glow');
             if (aboutContainer && aboutGlow) {
-                aboutContainer.addEventListener('mousemove', (e) => {
+                const handleAboutGlow = (e) => {
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
                     const rect = aboutContainer.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width) * 100;
-                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    const x = ((clientX - rect.left) / rect.width) * 100;
+                    const y = ((clientY - rect.top) / rect.height) * 100;
 
                     aboutGlow.style.setProperty('--glow-x', `${x}%`);
                     aboutGlow.style.setProperty('--glow-y', `${y}%`);
                     // Subtle transform to make it "leak" from the sides
                     aboutGlow.style.transform = `translate(${(x - 50) * 0.2}px, ${(y - 50) * 0.2}px)`;
-                });
+                };
+                aboutContainer.addEventListener('mousemove', handleAboutGlow);
+                aboutContainer.addEventListener('touchmove', handleAboutGlow, { passive: true });
+                aboutContainer.addEventListener('touchstart', handleAboutGlow, { passive: true });
             }
 
             // Scroll Responsive Light & Perspective Logic
