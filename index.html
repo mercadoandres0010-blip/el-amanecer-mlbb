@@ -14,13 +14,25 @@
 
 <body>
     <div class="scroll-progress" id="progressBar"></div>
+    <div class="global-sun-glare" id="global-glare"></div>
 
     <!-- Hero Section -->
     <section class="hero-container" id="home">
-        <img src="hero.png" alt="Amanecer Community Hero Background" class="hero-image">
-        <div class="hero-overlay"></div>
+        <!-- Professional Cinematic Sunrise Video -->
+        <video autoplay muted loop playsinline class="hero-video" poster="hero.png">
+            <source src="https://v1.mixkit.co/videos/download/mixkit-bright-sun-rising-over-the-mountains-42646.mp4"
+                type="video/mp4">
+        </video>
+        <!-- Infinite Motion Image (Handled by CSS like "Banana AI" movement) -->
+        <img src="hero.png" alt="Amanecer Hero" class="hero-image-fallback">
+        <div class="wind-overlay" id="wind-aura"></div>
+        <div class="hero-sun-glare" id="sun-glare"></div>
+        <div class="hero-sun-glare-rays" id="sun-rays"></div>
+        <div class="hero-overlay" id="hero-mask"></div>
         <div class="hero-content">
-            <h1 style="animation: revealText 1.5s cubic-bezier(0.77, 0, 0.175, 1);">Amanecer</h1>
+            <h1>Amanecer</h1>
+            <span class="hero-by-pink">(by
+                Pink)</span>
             <p class="hero-subtitle" style="animation: float 4s ease-in-out infinite;">La comunidad donde los héroes
                 ascienden. Estrategia, pasión y victoria en Mobile
                 Legends.</p>
@@ -65,8 +77,16 @@
                     </div>
                 </div>
             </div>
-            <div class="about-image-container reveal-right">
-                <img src="battle.png" alt="Mobile Legends Battle" class="about-image">
+            <div class="about-image-container reveal-right" id="about-container">
+                <div class="about-side-glow" id="about-glow"></div>
+                <!-- Motion Background -->
+                <video autoplay muted loop playsinline class="about-video" poster="battle.png">
+                    <source
+                        src="https://v1.mixkit.co/videos/download/mixkit-mysterious-mountain-covered-with-fog-712.mp4"
+                        type="video/mp4">
+                </video>
+                <!-- Infinite Motion Image -->
+                <img src="battle.png" alt="Battle Hero" class="about-image-fallback">
             </div>
         </div>
     </section>
@@ -104,6 +124,71 @@
                     <a href="https://www.bonoxs.com/mobile-legends" target="_blank" class="btn-bonoxs">Recargar
                         Ahora</a>
                 </div>
+            </div>
+            <div class="tournament-controls reveal">
+                <button onclick="toggleWinners()" class="btn-winners">
+                    <i class="fas fa-trophy"></i> Ver Ganadores de Torneo
+                </button>
+            </div>
+    </section>
+
+    <!-- Hall of Fame Section -->
+    <section id="hall-of-fame" class="hall-of-fame">
+        <div class="glorious-particles" id="particles-hall"></div>
+        <div class="section-title reveal">
+            <span class="subtitle" style="color: var(--gold); letter-spacing: 5px;">LEYENDAS INMORTALES</span>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 4rem;">Salón de la Gloria</h2>
+            <p>Aquellos que forjaron su nombre con sangre, estrategia y honor en nuestros coliseos.</p>
+        </div>
+
+        <div class="hall-grid">
+            <!-- Champion 1 - The MVP -->
+            <div class="champion-card reveal">
+                <div class="champion-avatar">
+                    <i class="fas fa-crown glorious-crown"></i>
+                    <div class="avatar-frame">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shadow&backgroundColor=0f0f1b"
+                            alt="ShadowKiller">
+                    </div>
+                    <div class="rank-badge">MAXIMUS MVP</div>
+                </div>
+                <span class="tournament-title">Juegos del Amanecer v1</span>
+                <h3>ShadowKiller</h3>
+                <p class="victory-quote">"En la Tierra del Amanecer, mi espada fue la ley y la victoria mi única
+                    sombra."</p>
+                <span class="victory-date">Diciembre 2025 • SQUAD DOMINANCE</span>
+            </div>
+
+            <!-- Champion 2 - The Supreme -->
+            <div class="champion-card reveal" style="transition-delay: 0.1s;">
+                <div class="champion-avatar">
+                    <i class="fas fa-crown glorious-crown"></i>
+                    <div class="avatar-frame">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&backgroundColor=0f0f1b"
+                            alt="LunaAzzurra">
+                    </div>
+                    <div class="rank-badge">SUPREME CHAMPION</div>
+                </div>
+                <span class="tournament-title">Copa Amanecer Spring</span>
+                <h3>LunaAzzurra</h3>
+                <p class="victory-quote">"La jungla me susurró el camino, y yo le entregué la gloria del Amanecer."</p>
+                <span class="victory-date">Febrero 2026 • SOLO QUEUE LEGEND</span>
+            </div>
+
+            <!-- Champion 3 - The Immortal -->
+            <div class="champion-card reveal" style="transition-delay: 0.2s;">
+                <div class="champion-avatar">
+                    <i class="fas fa-crown glorious-crown"></i>
+                    <div class="avatar-frame">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Iron&backgroundColor=0f0f1b"
+                            alt="IronWall">
+                    </div>
+                    <div class="rank-badge">IMMORTAL SHIELD</div>
+                </div>
+                <span class="tournament-title">Torneo de Squads v2</span>
+                <h3>IronWall</h3>
+                <p class="victory-quote">"Caerán imperios antes de que mi escudo permita que dañen a mis hermanos."</p>
+                <span class="victory-date">Marzo 2026 • TACTICAL DEFENSER</span>
             </div>
         </div>
     </section>
@@ -170,6 +255,7 @@
             </a>
         </div>
     </section>
+
 
     <!-- E-sports Recruitment Section -->
     <section id="esports" class="esports-section">
@@ -243,6 +329,47 @@
             </div>
         </div>
     </div>
+
+    <!-- Real-time Status Monitor (Test Tool) -->
+    <div id="status-monitor" class="status-monitor">
+        <div class="monitor-header">
+            <span><i class="fas fa-microchip"></i> Panel de Sincronización</span>
+            <button onclick="toggleMonitor()" class="monitor-close">&times;</button>
+        </div>
+        <div class="monitor-body">
+            <div class="monitor-item" id="mon-tiktok">
+                <span class="mon-label">TikTok</span>
+                <span class="mon-status">Buscando...</span>
+                <span class="mon-time">-</span>
+            </div>
+            <div class="monitor-item" id="mon-youtube">
+                <span class="mon-label">YouTube</span>
+                <span class="mon-status">Buscando...</span>
+                <span class="mon-time">-</span>
+            </div>
+            <div class="monitor-item" id="mon-whatsapp">
+                <span class="mon-label">WhatsApp</span>
+                <span class="mon-status">Buscando...</span>
+                <span class="mon-time">-</span>
+            </div>
+            <div class="monitor-item" id="mon-kick">
+                <span class="mon-label">Kick Live</span>
+                <span class="mon-status">Buscando...</span>
+                <span class="mon-time">-</span>
+            </div>
+        </div>
+        <div class="monitor-footer">
+            <button onclick="runManualTest()" id="btn-manual-test">
+                <i class="fas fa-sync-alt"></i> Ejecutar Test Real-Time
+            </button>
+        </div>
+    </div>
+
+    <!-- Toggle Monitor Button (Floating) -->
+    <button id="toggle-monitor-btn" onclick="toggleMonitor()" class="floating-debug-btn"
+        title="Verificar Sincronización">
+        <i class="fas fa-vial"></i>
+    </button>
 
     <!-- Interactive script for reveal animations -->
     <script type="module">
@@ -400,100 +527,173 @@
             progressBar.style.width = scrolled + "%";
         });
 
-        // --- Sincronización 100% Real con Plataformas Sociales ---
+        // --- Sincronización Optimizada y Real-Time ---
         const TIKTOK_USERNAME = 'elamanecermlbb';
         const KICK_USERNAME = 'elamanecer';
         const YOUTUBE_URL = 'https://www.youtube.com/@comunidadamanecer1';
         const WHATSAPP_URL = 'https://chat.whatsapp.com/JmzOKYDfknnCtfyTbuhmSX';
 
-        // Valores base REALES (YouTube actualizado a 112 según última auditoría)
         let currentRealStats = {
             tiktok: 1345,
             youtube: 112,
             whatsapp: 642
         };
 
-        async function updateSocialStats() {
-            const timestamp = new Date().getTime();
+        const PROXY_URL = 'https://api.allorigins.win/get?url=';
 
-            const platforms = [
-                {
-                    id: 'tiktok-count',
-                    key: 'tiktok',
-                    url: `https://www.tiktok.com/@${TIKTOK_USERNAME}?t=${timestamp}`,
-                    regex: [/"followerCount":(\d+)/, /"stats":\{"followerCount":(\d+)/, /(\d+)\s+Followers/i, /"followers":(\d+)/]
-                },
-                {
-                    id: 'youtube-count',
-                    key: 'youtube',
-                    url: `${YOUTUBE_URL}?t=${timestamp}`,
-                    regex: [/"subscriberCountText":\{"simpleText":"([\d.,KMB]+)\s+sus/, /label":"([\d.,KMB]+)\s+sus/, /([\d.,KMB]+)\s+(suscriptores|subscribers)/i, /subscriberCountText.*?simpleText":"(.*?)"/]
-                },
-                {
-                    id: 'whatsapp-count',
-                    key: 'whatsapp',
-                    url: `${WHATSAPP_URL}?t=${timestamp}`,
-                    regex: [/(\d+)\s+(miembros|members|participantes|participants)/i, /content=".*?(\d+)\s+miembros/i, />(\d+)\s+miembros</i, /"miembros":(\d+)/]
-                }
-            ];
-
-            platforms.forEach(p => {
-                fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(p.url)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const h = data.contents;
-                        let foundValue = null;
-                        for (let reg of p.regex) {
-                            const m = h.match(reg);
-                            if (m && m[1]) {
-                                let text = m[1].replace(/[.,\s]/g, '');
-                                if (text.includes('K')) foundValue = parseFloat(text) * 1000;
-                                else if (text.includes('M')) foundValue = parseFloat(text) * 1000000;
-                                else foundValue = parseInt(text);
-                                break;
-                            }
-                        }
-                        if (foundValue && foundValue > 0) {
-                            if (foundValue !== currentRealStats[p.key]) {
-                                animateDigitChange(p.id, currentRealStats[p.key], foundValue);
-                                currentRealStats[p.key] = foundValue;
-                                localStorage.setItem(`amanecer_stats_${p.key}`, foundValue);
-                            }
-                        }
-                    })
-                    .catch(() => { });
-            });
+        async function fetchWithTimeout(url, options = {}, timeout = 8000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (e) {
+                clearTimeout(id);
+                throw e;
+            }
         }
 
-        async function checkLiveStatus() {
+        async function updateSocialStats(isManual = false) {
             const timestamp = new Date().getTime();
-            // TikTok
-            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.tiktok.com/@${TIKTOK_USERNAME}?t=${timestamp}`)}`)
-                .then(res => res.json())
-                .then(data => {
-                    const isLive = data.contents.includes('"isLive":true');
-                    const badge = document.getElementById('tiktok-live-badge');
-                    const card = document.getElementById('tiktok-card');
-                    if (badge) {
-                        isLive ? badge.classList.add('is-live') : badge.classList.remove('is-live');
-                        isLive ? card.classList.add('card-live-glow') : card.classList.remove('card-live-glow');
-                    }
-                }).catch(() => { });
+            const logStatus = (id, status, error = false) => {
+                const el = document.getElementById(`mon-${id}`);
+                if (el) {
+                    const statusEl = el.querySelector('.mon-status');
+                    const timeEl = el.querySelector('.mon-time');
+                    statusEl.innerText = status;
+                    statusEl.style.color = error ? '#ff4d4d' : '#53FC18';
+                    timeEl.innerText = new Date().toLocaleTimeString();
+                }
+            };
 
-            // Kick
-            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://kick.com/api/v1/channels/${KICK_USERNAME}?t=${timestamp}`)}`)
-                .then(res => res.json())
-                .then(data => {
-                    const channel = JSON.parse(data.contents);
-                    if (channel && channel.livestream) {
-                        document.getElementById('kick-live-badge').classList.add('is-live');
-                        document.getElementById('kick-card').classList.add('card-live-glow');
-                        document.getElementById('kick-card').classList.add('kick');
-                    } else {
-                        document.getElementById('kick-live-badge').classList.remove('is-live');
-                        document.getElementById('kick-card').classList.remove('card-live-glow');
+            // 1. WhatsApp Sync
+            fetchStatus('whatsapp', `${WHATSAPP_URL}?t=${timestamp}`,
+                [/(\d+)\s+(miembros|members|participantes|participants)/i, /content=".*?(\d+)\s+miembros/i],
+                logStatus);
+
+            // 2. YouTube Sync
+            fetchStatus('youtube', `${YOUTUBE_URL}?t=${timestamp}`,
+                [/"subscriberCountText":\{"simpleText":"([\d.,KMB]+)\s+sus/, /([\d.,KMB]+)\s+(suscriptores|subscribers)/i],
+                logStatus);
+
+            // 3. TikTok Sync (Merged Stats + Live)
+            fetchTikTokData(logStatus);
+
+            // 4. Kick Sync
+            checkKickLive(logStatus);
+        }
+
+        async function fetchStatus(key, url, regexList, logCallback) {
+            try {
+                logCallback(key, 'Conectando...');
+                const res = await fetchWithTimeout(`${PROXY_URL}${encodeURIComponent(url)}`);
+                const data = await res.json();
+                const html = data.contents;
+
+                let foundValue = null;
+                for (let reg of regexList) {
+                    const m = html.match(reg);
+                    if (m && m[1]) {
+                        let text = m[1].replace(/[.,\s]/g, '');
+                        if (text.includes('K')) foundValue = parseFloat(text) * 1000;
+                        else if (text.includes('M')) foundValue = parseFloat(text) * 1000000;
+                        else foundValue = parseInt(text);
+                        break;
                     }
-                }).catch(() => { });
+                }
+
+                if (foundValue && foundValue > 0) {
+                    updateUIStat(key, foundValue);
+                    logCallback(key, `OK: ${foundValue}`);
+                } else {
+                    logCallback(key, 'No se encontró valor', true);
+                }
+            } catch (e) {
+                logCallback(key, 'Error de conexión', true);
+            }
+        }
+
+        async function fetchTikTokData(logCallback) {
+            const key = 'tiktok';
+            const url = `https://www.tiktok.com/@${TIKTOK_USERNAME}?t=${new Date().getTime()}`;
+            try {
+                logCallback(key, 'Escaneando...');
+                const res = await fetchWithTimeout(`${PROXY_URL}${encodeURIComponent(url)}`);
+                const data = await res.json();
+                const html = data.contents;
+
+                // Live Status
+                const isLive = html.includes('"isLive":true') || html.includes('room_id');
+                const badge = document.getElementById('tiktok-live-badge');
+                const card = document.getElementById('tiktok-card');
+                if (badge) {
+                    isLive ? badge.classList.add('is-live') : badge.classList.remove('is-live');
+                    isLive ? card.classList.add('card-live-glow') : card.classList.remove('card-live-glow');
+                }
+
+                // Stats
+                const regexList = [/"followerCount":(\d+)/, /"stats":\{"followerCount":(\d+)/, /(\d+)\s+Followers/i];
+                let foundValue = null;
+                for (let reg of regexList) {
+                    const m = html.match(reg);
+                    if (m && m[1]) {
+                        foundValue = parseInt(m[1]);
+                        break;
+                    }
+                }
+
+                if (foundValue) {
+                    updateUIStat(key, foundValue);
+                    logCallback(key, `OK: ${foundValue}${isLive ? ' (LIVE!)' : ''}`);
+                } else {
+                    logCallback(key, isLive ? 'LIVE detectado (sin count)' : 'Fallback activo');
+                }
+            } catch (e) {
+                logCallback(key, 'Error TikTok', true);
+            }
+        }
+
+        async function checkKickLive(logCallback) {
+            const key = 'kick';
+            const url = `https://kick.com/api/v1/channels/${KICK_USERNAME}?t=${new Date().getTime()}`;
+            try {
+                logCallback(key, 'Verificando...');
+                const res = await fetchWithTimeout(`${PROXY_URL}${encodeURIComponent(url)}`);
+                const data = await res.json();
+
+                try {
+                    const channel = JSON.parse(data.contents);
+                    const isLive = channel && channel.livestream;
+                    const badge = document.getElementById('kick-live-badge');
+                    const card = document.getElementById('kick-card');
+
+                    if (badge) {
+                        if (isLive) {
+                            badge.classList.add('is-live');
+                            card.classList.add('card-live-glow');
+                            card.classList.add('kick');
+                            logCallback(key, '¡EN VIVO!');
+                        } else {
+                            badge.classList.remove('is-live');
+                            card.classList.remove('card-live-glow');
+                            logCallback(key, 'Offline');
+                        }
+                    }
+                } catch (pe) {
+                    logCallback(key, 'Error parsing (Cloudflare?)', true);
+                }
+            } catch (e) {
+                logCallback(key, 'Error Kick API', true);
+            }
+        }
+
+        function updateUIStat(key, newValue) {
+            if (newValue !== currentRealStats[key]) {
+                animateDigitChange(`${key}-count`, currentRealStats[key], newValue);
+                currentRealStats[key] = newValue;
+                localStorage.setItem(`amanecer_stats_${key}`, newValue);
+            }
         }
 
         function animateDigitChange(id, start, end) {
@@ -501,7 +701,7 @@
             if (elements.every(el => !el) || start === end) return;
 
             let startTimestamp = null;
-            const duration = 400; // Animación ultra-rápida
+            const duration = 600;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
@@ -516,8 +716,320 @@
             window.requestAnimationFrame(step);
         }
 
+        // Monitor Functions
+        window.toggleMonitor = () => {
+            const mon = document.getElementById('status-monitor');
+            mon.classList.toggle('active');
+        };
+
+        window.toggleWinners = () => {
+            const hall = document.getElementById('hall-of-fame');
+            const btn = document.querySelector('.btn-winners');
+            const isActive = hall.classList.toggle('active');
+
+            if (isActive) {
+                btn.innerHTML = '<i class="fas fa-times"></i> Ocultar Ganadores';
+                setTimeout(() => {
+                    hall.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                btn.innerHTML = '<i class="fas fa-trophy"></i> Ver Ganadores de Torneo';
+            }
+        };
+
+        window.runManualTest = async () => {
+            const btn = document.getElementById('btn-manual-test');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testeando...';
+            await updateSocialStats(true);
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Ejecutar Test Real-Time';
+            }, 2000);
+        };
+
+        // --- Optimized Advanced Micro-interactions ---
+        const initAdvancedFX = () => {
+            const cards = document.querySelectorAll('.social-card, .champion-card');
+
+            cards.forEach(card => {
+                let isHovered = false;
+
+                card.addEventListener('mouseenter', () => {
+                    isHovered = true;
+                    card.style.transition = 'transform 0.1s ease-out, box-shadow 0.4s ease'; // Snappy follow
+                });
+
+                card.addEventListener('mousemove', (e) => {
+                    if (!isHovered) return;
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    // Smoother Rotation Math
+                    const rotateX = ((y - centerY) / centerY) * -12; // Max 12 deg
+                    const rotateY = ((x - centerX) / centerX) * 12;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) translateZ(20px)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    isHovered = false;
+                    card.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'; // Smooth return
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) translateZ(0)`;
+                });
+            });
+
+            // Magnetic Buttons (Fixed Jitter)
+            const buttons = document.querySelectorAll('.btn-cta, .btn-tournament, .btn-bonoxs, .btn-esports, .btn-winners');
+            buttons.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+
+                    btn.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px) scale(1.08)`;
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)';
+                    btn.style.transform = `translate(0, 0) scale(1)`;
+                    setTimeout(() => btn.style.transition = '', 500);
+                });
+            });
+
+            // Sparkle Particle Effect for Hall of Fame
+            const createParticles = () => {
+                const container = document.getElementById('particles-hall');
+                if (!container) return;
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    const size = Math.random() * 3 + 1;
+                    particle.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        background: var(--gold);
+                        border-radius: 50%;
+                        top: ${Math.random() * 100}%;
+                        left: ${Math.random() * 100}%;
+                        opacity: ${Math.random() * 0.5};
+                        filter: blur(1px);
+                        animation: float-particle ${Math.random() * 3 + 2}s linear infinite;
+                    `;
+                    container.appendChild(particle);
+                }
+            };
+            createParticles();
+        };
+
+        // Cinematic Video & Wind Handling
+        const setupAdvancedFX = () => {
+            const videos = document.querySelectorAll('video');
+            const glare = document.getElementById('sun-glare');
+            const heroVideo = document.querySelector('.hero-video');
+            const heroImg = document.querySelector('.hero-image-fallback');
+            const windAura = document.getElementById('wind-aura');
+
+            // Create Wind Particles
+            for (let i = 0; i < 15; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.style.left = Math.random() * 100 + '%';
+                leaf.style.width = Math.random() * 10 + 5 + 'px';
+                leaf.style.height = leaf.style.width;
+                leaf.style.animationDelay = Math.random() * 10 + 's';
+                windAura.appendChild(leaf);
+            }
+
+            videos.forEach(vid => {
+                if (vid.readyState >= 3) vid.classList.add('video-active');
+                vid.onplaying = () => vid.classList.add('video-active');
+                vid.onerror = () => vid.style.display = 'none';
+            });
+
+            // Mouse Interactive Sun & Lens Flare Logic
+            const hero = document.getElementById('home');
+            const globalGlare = document.getElementById('global-glare');
+            const hallOfFame = document.getElementById('hall-of-fame');
+
+            const handleLightInteraction = (e) => {
+                // Check if Hall of Fame is active (visible)
+                const isHallVisible = hallOfFame && hallOfFame.classList.contains('active');
+
+                if (globalGlare) {
+                    if (isHallVisible) {
+                        globalGlare.classList.remove('active');
+                    } else {
+                        globalGlare.classList.add('active');
+                    }
+                }
+
+                const rect = hero.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+
+                // Screen coordinates for global effect
+                const globalX = (e.clientX / window.innerWidth) * 100;
+                const globalY = (e.clientY / window.innerHeight) * 100;
+
+                document.documentElement.style.setProperty('--sun-x', `${globalX}%`);
+                document.documentElement.style.setProperty('--sun-y', `${globalY}%`);
+
+                if (glare) {
+                    const sunX = 50 + (x - 0.5) * 60;
+                    const sunY = 30 + (y - 0.5) * 40;
+                    glare.style.setProperty('--sun-x', `${sunX}%`);
+                    glare.style.setProperty('--sun-y', `${sunY}%`);
+
+                    const flareX = 50 - (x - 0.5) * 80;
+                    const flareY = 50 - (y - 0.5) * 80;
+                    glare.style.setProperty('--flare-x', `${flareX}%`);
+                    glare.style.setProperty('--flare-y', `${flareY}%`);
+
+                    const flareX2 = 50 - (x - 0.5) * 120;
+                    const flareY2 = 50 - (y - 0.5) * 120;
+                    glare.style.setProperty('--flare-x-2', `${flareX2}%`);
+                    glare.style.setProperty('--flare-y-2', `${flareY2}%`);
+                }
+
+                const rays = document.getElementById('sun-rays');
+                if (rays) {
+                    rays.style.setProperty('--sun-x', `${50 + (x - 0.5) * 30}%`);
+                    rays.style.setProperty('--sun-y', `${20 + (y - 0.5) * 20}%`);
+                    rays.style.setProperty('--rays-rot', `${(x - 0.5) * 40}deg`);
+                }
+
+                // Dazzle Text Effect Logic (only if not in Hall of Fame)
+                if (!isHallVisible) {
+                    const dazzleTargets = document.querySelectorAll('h2, h3, p, .btn-cta, .btn-secondary-outline');
+                    const heroTitle = document.querySelector('.hero-container h1');
+                    const byPink = document.querySelector('.hero-by-pink');
+
+                    // Side-lighting blur: sharp when cursor is at the SIDE, blurry otherwise
+                    function applySideBlur(el, cssVar, maxRadius) {
+                        const rect = el.getBoundingClientRect();
+                        const cx = rect.left + rect.width / 2;
+                        const cy = rect.top + rect.height / 2;
+                        const dx = e.clientX - cx;
+                        const dy = e.clientY - cy;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist > maxRadius) {
+                            el.classList.remove('sun-blur-reveal');
+                            el.style.setProperty(cssVar, '8px');
+                            return;
+                        }
+
+                        el.classList.add('sun-blur-reveal');
+
+                        // Calculate how "lateral" the cursor is (0 = above/below, 1 = perfect side)
+                        const angle = Math.abs(Math.atan2(dy, dx)); // 0 = right, PI = left, PI/2 = above/below
+                        // lateralness: 1 when cursor is at the side (angle ~0 or ~PI), 0 when above/below (~PI/2)
+                        const lateralness = Math.abs(Math.cos(angle)); // cos(0)=1 (side), cos(PI/2)=0 (top/bottom)
+
+                        // Combine distance factor and lateral factor
+                        const distFactor = dist / maxRadius; // 0 (close) to 1 (far)
+                        const blur = Math.max(0, 8 * (1 - lateralness) + 4 * distFactor);
+                        el.style.setProperty(cssVar, `${Math.min(blur, 8).toFixed(1)}px`);
+                    }
+
+                    if (heroTitle) applySideBlur(heroTitle, '--title-blur', 350);
+                    if (byPink) applySideBlur(byPink, '--pink-blur', 300);
+
+                    // Normal dazzle for other text elements
+                    dazzleTargets.forEach(el => {
+                        const elRect = el.getBoundingClientRect();
+                        const centerX = elRect.left + elRect.width / 2;
+                        const centerY = elRect.top + elRect.height / 2;
+                        const dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
+                        if (dist < 150) {
+                            el.classList.add('sun-dazzle');
+                        } else {
+                            el.classList.remove('sun-dazzle');
+                        }
+                    });
+                } else {
+                    // Remove all dazzle if hall is visible
+                    document.querySelectorAll('.sun-dazzle').forEach(el => el.classList.remove('sun-dazzle'));
+                    document.querySelectorAll('.sun-blur-reveal').forEach(el => el.classList.remove('sun-blur-reveal'));
+                }
+            };
+
+            window.addEventListener('mousemove', handleLightInteraction);
+
+            // About Side Glow Logic
+            const aboutContainer = document.getElementById('about-container');
+            const aboutGlow = document.getElementById('about-glow');
+            if (aboutContainer && aboutGlow) {
+                aboutContainer.addEventListener('mousemove', (e) => {
+                    const rect = aboutContainer.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+                    aboutGlow.style.setProperty('--glow-x', `${x}%`);
+                    aboutGlow.style.setProperty('--glow-y', `${y}%`);
+                    // Subtle transform to make it "leak" from the sides
+                    aboutGlow.style.transform = `translate(${(x - 50) * 0.2}px, ${(y - 50) * 0.2}px)`;
+                });
+            }
+
+            // Scroll Responsive Light & Perspective Logic
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const heroHeight = hero.offsetHeight;
+                const scrollPercent = Math.min(scrollY / heroHeight, 1);
+
+                // Intense 3D Perspective Change on Scroll
+                if (glare) {
+                    const scrollSunY = 20 + (scrollPercent * 60);
+                    glare.style.setProperty('--sun-y', `${scrollSunY}%`);
+                    glare.style.setProperty('--glare-opacity', 0.6 + (scrollPercent * 0.4));
+
+                    glare.style.filter = `hue-rotate(${scrollPercent * 120}deg) blur(5px) contrast(1.8)`;
+                    glare.style.transform = `perspective(1000px) rotateX(${scrollPercent * 25}deg) scale(${1 + scrollPercent})`;
+                }
+
+                if (heroVideo) {
+                    heroVideo.style.filter = `brightness(${0.4 + scrollPercent * 0.6}) contrast(1.3) saturate(${1 + scrollPercent * 0.5})`;
+                    heroVideo.style.transform = `translate(-50%, -50%) scale(1.05)`;
+                }
+
+                if (heroImg) {
+                    heroImg.style.filter = `brightness(${0.5 + scrollPercent * 0.5}) contrast(1.4) saturate(${1 + scrollPercent * 0.6})`;
+                    heroImg.style.transform = `translate(-50%, -50%) scale(1)`;
+                }
+            });
+        };
+
+        const particleStyles = `
+            @keyframes float-particle {
+                0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                50% { opacity: 0.5; }
+                100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            }
+        `;
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = particleStyles;
+        document.head.appendChild(styleSheet);
+
         window.addEventListener('load', () => {
-            // CARGA INSTANTÁNEA DESDE CACHÉ (Arriba y Abajo)
+            initAdvancedFX();
+            setupAdvancedFX();
+            // Check for Dev/Admin mode to show debug tools
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('dev') || params.has('admin') || params.has('debug')) {
+                const debugBtn = document.getElementById('toggle-monitor-btn');
+                const monitor = document.getElementById('status-monitor');
+                if (debugBtn) debugBtn.style.display = 'flex';
+                if (monitor) monitor.style.display = 'block';
+            }
+
+            // Initial Cache Load
             Object.keys(currentRealStats).forEach(key => {
                 const cached = localStorage.getItem(`amanecer_stats_${key}`);
                 if (cached) currentRealStats[key] = parseInt(cached);
@@ -530,12 +1042,9 @@
                 if (cardEl) cardEl.innerText = val;
             });
 
+            // Start Sync
             updateSocialStats();
-            checkLiveStatus();
-
-            // Sincronización cada 10 segundos
-            setInterval(updateSocialStats, 10000);
-            setInterval(checkLiveStatus, 20000);
+            setInterval(updateSocialStats, 30000); // 30s para evitar bloqueos
         });
     </script>
 </body>

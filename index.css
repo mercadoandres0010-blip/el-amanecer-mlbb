@@ -1,17 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
 :root {
-    --primary: #FFD700;
-    --secondary: #FF8C00;
-    --accent: #9D50BB;
-    --dark: #0F0F1B;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-white: #FFFFFF;
-    --text-gray: #B0B0B0;
-    --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --gold: #FFD700;
+    --primary: #9d50bb;
+    --primary-dark: #6e48aa;
+    --secondary: #e5b2ca;
+    --dark: #0a0a0b;
+    --darker: #050505;
+    --text-white: #ffffff;
+    --text-gray: #b0b0b0;
+    --gold: #ffcc00;
+    --gold-glow: rgba(255, 204, 0, 0.4);
+    --selection-bg: rgba(157, 80, 187, 0.3);
+    /* Dynamic Sun Glow Properties */
+    --sun-x: 50%;
+    --sun-y: 20%;
+    --glare-opacity: 0.7;
+    --glass: rgba(10, 10, 14, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 html {
@@ -33,28 +38,239 @@ body {
     overflow-x: hidden;
 }
 
-/* Background Hero Animation */
-.hero-container {
-    height: 100vh;
-    width: 100%;
+/* Global Sun Glare Text Interation */
+h1,
+h2,
+h3,
+p,
+.btn-cta,
+.btn-secondary-outline {
     position: relative;
+    transition: text-shadow 0.3s ease, filter 0.3s ease;
+}
+
+/* Dazzle Effect when sun passes over */
+.sun-dazzle {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(255, 200, 50, 0.4) !important;
+    filter: brightness(1.5) contrast(1.2) !important;
+}
+
+/* Persistent Sun Glare Background */
+.global-sun-glare {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at var(--sun-x) var(--sun-y),
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 200, 50, 0.05) 20%,
+            transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+    /* No mix-blend-mode so it respects z-index stacking */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.global-sun-glare.active {
+    opacity: 1;
+}
+
+/* Disable effect for Hall of Fame */
+#hall-of-fame .global-sun-glare,
+#hall-of-fame * {
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+/* Hero Container */
+.hero-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    isolation: isolate;
+    /* Contains blend modes within the hero */
 }
 
-.hero-image {
+.hero-video,
+.hero-image-fallback {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.hero-video {
+    opacity: 0;
+    /* Hidden until playing */
+    transition: opacity 2s ease;
+    pointer-events: none;
+    filter: brightness(0.4) contrast(1.2);
+}
+
+.hero-image-fallback {
+    z-index: 0;
+    filter: brightness(0.5) contrast(1.2);
+    /* Movement removed as per user request */
+}
+
+.hero-sun-glare {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    filter: brightness(0.4);
-    z-index: -1;
-    transform: scale(1.1);
-    animation: zoomOut 20s infinite alternate;
+    background: radial-gradient(circle at var(--sun-x, 50%) var(--sun-y, 20%),
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 215, 0, 0.6) 5%,
+            rgba(255, 120, 0, 0.3) 25%,
+            transparent 60%);
+    z-index: 4;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: var(--glare-opacity, 0.7);
+    filter: blur(2px) contrast(2) saturate(1.5);
+    will-change: opacity, transform, background;
+}
+
+/* Secondary Lens Flare (Interactive) */
+.hero-sun-glare::before {
+    content: '';
+    position: absolute;
+    top: var(--flare-y, 50%);
+    left: var(--flare-x, 50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(20px);
+    transform: translate(-50%, -50%);
+    mix-blend-mode: overlay;
+    z-index: 5;
+}
+
+/* Chromatic Orbs */
+.hero-sun-glare::after {
+    content: '';
+    position: absolute;
+    top: var(--flare-y-2, 60%);
+    left: var(--flare-x-2, 60%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 255, 255, 0.15);
+    box-shadow:
+        100px -100px 30px rgba(255, 0, 255, 0.15),
+        -150px 150px 50px rgba(255, 255, 0, 0.15);
+    border-radius: 50%;
+    filter: blur(5px);
+    transform: translate(-50%, -50%);
+    mix-blend-mode: color-dodge;
+    z-index: 5;
+}
+
+.hero-sun-glare-rays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hero-sun-glare-rays::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-conic-gradient(from var(--rays-rot, 0deg) at var(--sun-x, 50%) var(--sun-y, 20%),
+            transparent 0deg,
+            rgba(255, 255, 255, 0.08) 5deg,
+            transparent 15deg);
+    mask-image: radial-gradient(circle at var(--sun-x, 50%) var(--sun-y, 20%), black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at var(--sun-x, 50%) var(--sun-y, 20%), black, transparent 80%);
+    mix-blend-mode: soft-light;
+    opacity: 0.4;
+}
+
+.video-active {
+    opacity: 1 !important;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.4) 60%,
+            var(--dark) 100%);
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+/* Base fallback for static look */
+.hero-image-fallback {
+    transform: translate(-50%, -50%) scale(1);
+    transform-origin: center center;
+}
+
+/* Wind Particles */
+.wind-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.leaf {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50% 0 50% 0;
+    animation: windMove 10s linear infinite;
+}
+
+@keyframes windMove {
+    0% {
+        transform: translate(-100px, 100vh) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    90% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(120vw, -100px) rotate(720deg);
+        opacity: 0;
+    }
 }
 
 @keyframes zoomOut {
@@ -160,23 +376,65 @@ body {
 
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 10;
     text-align: center;
     padding: 2rem;
     max-width: 800px;
 }
 
 h1 {
-    font-size: clamp(3rem, 10vw, 6rem);
+    font-size: clamp(3.5rem, 12vw, 8rem);
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: -2px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    letter-spacing: -4px;
+    background: linear-gradient(135deg, var(--text-white) 30%, var(--primary), var(--secondary));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+    margin-bottom: 0.5rem;
+    line-height: 0.9;
+    opacity: 0;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0)) blur(var(--title-blur, 8px));
+    transition: opacity 0.4s ease, filter 0.25s ease-out, text-shadow 0.4s ease;
+}
+
+/* Amanecer revealed by sun */
+.hero-container h1.sun-blur-reveal {
+    opacity: 1;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.4)) blur(var(--title-blur, 0px)) brightness(1.5) contrast(1.2);
+    text-shadow:
+        0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(255, 200, 50, 0.4);
+}
+
+/* By Pink credit under Amanecer – Hidden until sun reveals it */
+.hero-by-pink {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(0.45rem, 1vw, 0.65rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    background: #B8860B;
+    /* Dark gold base */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 0.3rem;
+    margin-bottom: 1.2rem;
+    position: relative;
+    opacity: 0;
+    filter: drop-shadow(0 0 30px rgba(184, 134, 11, 0)) blur(var(--pink-blur, 8px));
+    transition: opacity 0.4s ease, filter 0.25s ease-out, text-shadow 0.4s ease;
+}
+
+/* Revealed when the sun illuminates it – dark gold color */
+.hero-by-pink.sun-blur-reveal {
+    opacity: 1;
+    filter: drop-shadow(0 0 30px rgba(184, 134, 11, 0.4)) blur(var(--pink-blur, 0px)) brightness(1.5) contrast(1.2);
+    text-shadow:
+        0 0 15px rgba(184, 134, 11, 0.8),
+        0 0 30px rgba(139, 101, 8, 0.5);
 }
 
 .hero-subtitle {
@@ -191,6 +449,8 @@ h1 {
     padding: 100px 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    isolation: isolate;
+    /* Block light from bleeding through */
 }
 
 .about-content {
@@ -211,19 +471,88 @@ h1 {
     color: var(--primary);
 }
 
-.about-text p {
-    font-size: 1.1rem;
-    color: var(--text-gray);
-    margin-bottom: 2rem;
-}
-
+/* Dynamic Section Backgrounds */
 .about-image-container {
     flex: 1;
     min-width: 300px;
     position: relative;
     border-radius: 30px;
-    overflow: hidden;
-    box-shadow: 0 0 50px rgba(157, 80, 187, 0.3);
+    /* overflow: hidden; -- Removed to allow glow to spill out */
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+    /* Prevents blend modes from leaking through child elements */
+}
+
+.about-side-glow {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%),
+            rgba(255, 200, 50, 0.6) 0%,
+            rgba(157, 80, 187, 0.3) 30%,
+            transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: -1;
+    /* Behind the image */
+    pointer-events: none;
+    /* No mix-blend-mode: the glow is only visible around the edges */
+    transition: transform 0.1s ease-out;
+}
+
+.about-image-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.8);
+}
+
+@keyframes infinitePanBattle {
+    from {
+        transform: scale(1.2) translateX(-8%) rotate(2deg);
+    }
+
+    to {
+        transform: scale(1.3) translateX(8%) rotate(-2deg);
+    }
+}
+
+.about-video,
+.about-image-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px;
+    /* Applied here instead of container */
+    z-index: 1;
+    /* Above the glow */
+    background: #000;
+    /* Solid background to completely block back light */
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+}
+
+.about-video {
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+}
+
+.about-image-fallback {
+    z-index: 1;
+}
+
+.about-image-container:hover .about-video,
+.about-image-container:hover .about-image-fallback {
+    filter: brightness(1);
+    transform: scale(1.05);
 }
 
 .about-image {
@@ -308,6 +637,7 @@ h1 {
     padding: 8rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    isolation: isolate;
 }
 
 .tournaments-grid {
@@ -361,6 +691,33 @@ h1 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
     color: var(--white);
+}
+
+.tournament-controls {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.btn-winners {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px dashed var(--gold);
+    color: var(--gold);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-winners:hover {
+    background: var(--gold);
+    color: var(--dark);
+    border-style: solid;
+    box-shadow: 0 0 20px var(--gold-glow);
 }
 
 .btn-tournament {
@@ -466,6 +823,12 @@ h1 {
 }
 
 .social-card {
+    position: relative;
+    perspective: 1000px;
+    /* For 3D rotation */
+}
+
+.social-card {
     background: var(--glass);
     border: 1px solid var(--glass-border);
     border-radius: 24px;
@@ -480,7 +843,8 @@ h1 {
     align-items: center;
     gap: 1.5rem;
     position: relative;
-    /* Added for badge positioning */
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
 /* New Live Status Badge Styles */
@@ -876,7 +1240,9 @@ footer {
         gap: 1rem;
         align-items: center;
     }
-}/* Auth Modal Styles */
+}
+
+/* Auth Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1090,4 +1456,368 @@ footer {
 .btn-secondary-outline:hover {
     background: var(--primary);
     color: var(--dark);
+}
+
+/* --- Status Monitor (Debug Tool) --- */
+.status-monitor {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 300px;
+    background: rgba(15, 15, 27, 0.95);
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    z-index: 10000;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.1);
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-bounce);
+    overflow: hidden;
+    display: none;
+    /* Hidden by default */
+}
+
+.status-monitor.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+.monitor-header {
+    background: rgba(255, 215, 0, 0.1);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.monitor-header span {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--gold);
+    text-transform: uppercase;
+}
+
+.monitor-close {
+    background: none;
+    border: none;
+    color: var(--text-gray);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.monitor-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.monitor-item {
+    display: grid;
+    grid-template-columns: 1fr 120px 60px;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.mon-label {
+    color: var(--text-white);
+    font-weight: 600;
+}
+
+.mon-status {
+    text-align: right;
+    padding-right: 8px;
+}
+
+.mon-time {
+    color: var(--text-gray);
+    font-size: 0.7rem;
+    text-align: right;
+}
+
+.monitor-footer {
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.monitor-footer button {
+    width: 100%;
+    padding: 8px;
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.monitor-footer button:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+.monitor-footer button:disabled {
+    background: var(--text-gray);
+    cursor: not-allowed;
+}
+
+/* Floating Debug Button */
+.floating-debug-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--dark);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    display: none;
+    /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10001;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: var(--transition);
+}
+
+/* --- Hall of Fame Section (Glorious Mode) --- */
+.hall-of-fame {
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    visibility: hidden;
+    position: relative;
+}
+
+.hall-of-fame.active {
+    padding: 120px 2rem;
+    max-height: 4000px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.hall-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 3rem;
+    margin-top: 5rem;
+    perspective: 2000px;
+}
+
+.champion-card {
+    background: linear-gradient(145deg, #1a1a2e 0%, #0f0f1b 100%);
+    border-radius: 40px;
+    padding: 3.5rem 2.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* Fluid Conic Rotation */
+.champion-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg,
+            transparent 0deg,
+            rgba(255, 215, 0, 0.05) 90deg,
+            rgba(255, 215, 0, 0.3) 180deg,
+            rgba(255, 215, 0, 0.05) 270deg,
+            transparent 360deg);
+    animation: rotate-conic 10s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Golden Shine Animation */
+.champion-card::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(45deg,
+            transparent 45%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 55%);
+    transition: all 0.8s;
+    pointer-events: none;
+}
+
+.champion-card:hover::after {
+    top: 100%;
+    left: 100%;
+}
+
+.champion-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 215, 0, 0.25);
+}
+
+.champion-avatar {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.avatar-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    padding: 8px;
+    background: linear-gradient(135deg, var(--gold), #b8860b, var(--gold));
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    position: relative;
+    transform: translateZ(50px);
+    /* Pushes frame out in 3D */
+    transition: transform 0.4s ease;
+}
+
+.avatar-frame img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #0f0f1b;
+}
+
+.glorious-crown {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(80px);
+    /* Higher 3D plane */
+    font-size: 2.8rem;
+    color: var(--gold);
+    filter: drop-shadow(0 0 15px var(--gold));
+    animation: glorious-float 4s ease-in-out infinite;
+    z-index: 10;
+}
+
+.rank-badge {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(60px);
+    background: linear-gradient(90deg, #b8860b, var(--gold), #b8860b);
+    color: #000;
+    font-weight: 900;
+    font-size: 0.8rem;
+    padding: 8px 25px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s ease;
+}
+
+@keyframes glorious-float {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateZ(80px) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateZ(80px) translateY(-10px);
+    }
+}
+
+.champion-card h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to bottom, #fff, #ccc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Playfair Display', serif;
+}
+
+.tournament-title {
+    color: var(--gold);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+.victory-quote {
+    font-style: italic;
+    color: var(--text-gray);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.victory-date {
+    font-size: 0.8rem;
+    color: var(--gold);
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* Particle Background for Section */
+.glorious-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes rotate-conic {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Magnetic Button Utility */
+.magnetic-wrap {
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (max-width: 768px) {
+    .status-monitor {
+        width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+    }
+
+    .hall-of-fame {
+        padding: 60px 1.5rem;
+    }
 }
