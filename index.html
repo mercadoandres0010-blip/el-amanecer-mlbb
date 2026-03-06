@@ -964,9 +964,23 @@
                 }
             };
 
-            window.addEventListener('mousemove', handleLightInteraction);
-            window.addEventListener('touchmove', handleLightInteraction, { passive: true });
-            window.addEventListener('touchstart', handleLightInteraction, { passive: true });
+            // RAF Throttling logic for smooth mobile performance
+            let isLightRafPending = false;
+            let lastLightEvent = null;
+            const onLightInteraction = (e) => {
+                lastLightEvent = e;
+                if (!isLightRafPending) {
+                    isLightRafPending = true;
+                    requestAnimationFrame(() => {
+                        handleLightInteraction(lastLightEvent);
+                        isLightRafPending = false;
+                    });
+                }
+            };
+
+            window.addEventListener('mousemove', onLightInteraction);
+            window.addEventListener('touchmove', onLightInteraction, { passive: true });
+            window.addEventListener('touchstart', onLightInteraction, { passive: true });
 
             // About Side Glow Logic
             const aboutContainer = document.getElementById('about-container');
@@ -984,9 +998,23 @@
                     // Subtle transform to make it "leak" from the sides
                     aboutGlow.style.transform = `translate(${(x - 50) * 0.2}px, ${(y - 50) * 0.2}px)`;
                 };
-                aboutContainer.addEventListener('mousemove', handleAboutGlow);
-                aboutContainer.addEventListener('touchmove', handleAboutGlow, { passive: true });
-                aboutContainer.addEventListener('touchstart', handleAboutGlow, { passive: true });
+
+                let isAboutRafPending = false;
+                let lastAboutEvent = null;
+                const onAboutInteraction = (e) => {
+                    lastAboutEvent = e;
+                    if (!isAboutRafPending) {
+                        isAboutRafPending = true;
+                        requestAnimationFrame(() => {
+                            handleAboutGlow(lastAboutEvent);
+                            isAboutRafPending = false;
+                        });
+                    }
+                };
+
+                aboutContainer.addEventListener('mousemove', onAboutInteraction);
+                aboutContainer.addEventListener('touchmove', onAboutInteraction, { passive: true });
+                aboutContainer.addEventListener('touchstart', onAboutInteraction, { passive: true });
             }
 
             // Scroll Responsive Light & Perspective Logic
